@@ -1,6 +1,5 @@
 /*------Menu-Message-IDs-----------------------*/
-const uint32 MENU_FILE_ABOUT = 'MFat';
-const uint32 MENU_FILE_QUIT = 'MFqu';
+const uint32 MENU_APP_QUIT = 'MAqu';
 
 /*------Converting-Message-IDs-----------------*/
 // Input

@@ -34,7 +34,7 @@ VandelayWindow::VandelayWindow()
 	item->SetTarget(be_app);
 	filemenu->AddItem(item);
 	filemenu->AddSeparatorItem();
-	filemenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_FILE_QUIT), 'Q', B_COMMAND_KEY));
+	filemenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_APP_QUIT), 'Q', B_COMMAND_KEY));
 	
 	// Add BMenu to BMenuBar
 	vanmenubar->AddItem(filemenu);
@@ -109,7 +109,6 @@ VandelayWindow::VandelayWindow()
 	
 	/*------Set-views-background-colors-----------------------*/
 	VanView->SetViewColor(bgcolor);
-	vanbox->SetViewColor(bgcolor);
 	
 	
 	BLayoutBuilder::Group<>(VanView, B_VERTICAL)
@@ -150,7 +149,7 @@ void VandelayWindow::MessageReceived(BMessage *message)
 	switch(message->what)
 	{
 
-		case MENU_FILE_QUIT:
+		case MENU_APP_QUIT:
 			be_app->PostMessage(B_QUIT_REQUESTED);
 		break;
 		
