@@ -1,65 +1,55 @@
 #include <Application.h>
+#include <LayoutBuilder.h>
+#include <Alert.h>
 #include "VandelayWindow.h"
-#include "VandelayView.h"
 #include "Constants.h"
 #include "VandelayEngine.h"
 
-float InputValue, Result; // Store Input And Result value
-int FromValue, ToValue; // Store From and To number
-VanTextControl *vantextcontrol, *vanresultcontrol; // Pointers to VanTextControl
-VanMenuField *vanmenufieldfrom, *vanmenufieldto; // Pointers to VanMenuField
 
 
 /*------Create-new-BWindow-class--------------------------------------*/
-VandelayWindow::VandelayWindow(BRect frame)
-		: BWindow(frame, "Vandelay", B_TITLED_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
+VandelayWindow::VandelayWindow()
+		: BWindow(BRect(0,0,-1,-1), "Vandelay", B_TITLED_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
 {
+	
+	// Resize and Center Window on Screen
+	ResizeTo(400,300);
+	CenterOnScreen();
+	
 	// Assign B_PANEL_BACKGROUND_COLOR to 'bgcolor'
 	rgb_color bgcolor = ui_color(B_PANEL_BACKGROUND_COLOR);
 	
 	// Set up a rectangle and make a new view
-	VandelayView *VanView;
-	VanView = new VandelayView(Bounds(), "VandelayView");
-
+	VanView = new BView("VandelayView", B_WILL_DRAW);
 	
 	// Create new BMenuBar
-	BRect VanRect = Bounds();
-	VanRect.bottom = VanRect.top +10;
-	VanMenuBar *vanmenubar;
-	vanmenubar = new VanMenuBar(VanRect, "VanMenuBar");
+	vanmenubar = new BMenuBar("VanMenuBar");
 	
 	// Create new BMenu
-	VanMenu *filemenu;
-	filemenu = new VanMenu("File");
+	filemenu = new BMenu("File");
 	
 	// Add menu items to BMenu
-	filemenu->AddItem(new BMenuItem("About", new BMessage(MENU_FILE_ABOUT)));
+	
+	BMenuItem * item = new BMenuItem("About" , new BMessage(B_ABOUT_REQUESTED));
+	item->SetTarget(be_app);
+	filemenu->AddItem(item);
 	filemenu->AddSeparatorItem();
-	filemenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_FILE_QUIT), 'Q'));
+	filemenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_FILE_QUIT), 'Q', B_COMMAND_KEY));
 	
 	// Add BMenu to BMenuBar
 	vanmenubar->AddItem(filemenu);
 	
-	// Create new BBox
-	VanBox *vanbox;
-	BRect VanBoxRect = Bounds();
-	VanBoxRect.top += 31;
-	VanBoxRect.bottom -= 10;
-	VanBoxRect.InsetBy(10, 0);
-	vanbox = new VanBox(VanBoxRect, "Vandelay");
 	
-	// Create new BTextControl
-	vantextcontrol = new VanTextControl(BRect(0.0, 0.0, 110.0, 10.0).OffsetToCopy(10.0, 15.0), "InputBox", "Convert:", "Enter #", new BMessage(CONVERT_FROM_VALUE));
+	// Create new BTextControl        
+	vantextcontrol = new BTextControl("InputBox", NULL, "Enter #", new BMessage(CONVERT_FROM_VALUE));
 	vantextcontrol->SetDivider(45.0);
 	vantextcontrol->SetModificationMessage(new BMessage(CONVERT_FROM_VALUE_MODMSG));
 	
 	
 	/*------Create-new-BMenuField-----------------------------*/
 	// Create new BMenu
-	VanMenu *vanmenufrom;
-	VanMenu *vanmenuto;
-	vanmenufrom = new VanMenu("<Select Unit>");
-	vanmenuto = new VanMenu("<Select Unit>");
+	vanmenufrom = new BMenu("<Select Unit>");
+	vanmenuto = new BMenu("<Select Unit>");
 				
 	// Add menu items to BMenus      // Distance
 	vanmenufrom->AddItem(new BMenuItem("Foot", new BMessage(CONVERT_FROM_FOOT)));
@@ -98,20 +88,22 @@ VandelayWindow::VandelayWindow(BRect frame)
 	vanmenuto->AddItem(new BMenuItem("Pound", new BMessage(CONVERT_TO_POUND)));
 		
 	// Create new BMenuField
-	vanmenufieldfrom = new VanMenuField(BRect(0.0, 0.0, 140.0, 10.0).OffsetToCopy(132.0, 15.0), "VanMenuFieldFrom", "From:", vanmenufrom);
+	vanmenufieldfrom = new BMenuField("VanMenuFieldFrom", NULL, vanmenufrom);
 	vanmenufieldfrom->SetDivider(32.0);
 	vanmenufieldfrom->Menu()->SetLabelFromMarked(true);
 	vanmenufieldfrom->SetEnabled(false);
 	
-	vanmenufieldto = new VanMenuField(BRect(0.0, 0.0, 140.0, 10.0).OffsetToCopy(132.0, 50.0), "VanMenuFieldTo", "To:", vanmenuto);
+	vanmenufieldto = new BMenuField("VanMenuFieldTo", NULL, vanmenuto);
 	vanmenufieldto->SetDivider(32.0);
 	vanmenufieldto->SetAlignment(B_ALIGN_RIGHT);	
 	vanmenufieldto->Menu()->SetLabelFromMarked(true);
 	vanmenufieldto->SetEnabled(false);
 	
+	vanfromtext= new BStringView( "input_label", "Convert From");
+	vantotext= new BStringView("output_label", "Convert To");
 	
 	/*------Create-a-result-view------------------------------*/
-	vanresultcontrol = new VanTextControl(BRect(0.0, 0.0, 150.0, 10.0).OffsetToCopy(48.0, 125.0), "VanResultControl", "Result:", NULL, NULL);
+	vanresultcontrol = new BTextControl("VanResultControl", NULL, NULL, NULL);
 	vanresultcontrol->SetDivider(35.0);
 	
 	
@@ -119,14 +111,28 @@ VandelayWindow::VandelayWindow(BRect frame)
 	VanView->SetViewColor(bgcolor);
 	vanbox->SetViewColor(bgcolor);
 	
-	/*------Add views to VandelayWindow-----------------------*/
-	AddChild(VanView);
-	VanView->AddChild(vanmenubar);
-	VanView->AddChild(vanbox);
-	vanbox->AddChild(vantextcontrol);
-	vanbox->AddChild(vanmenufieldfrom);
-	vanbox->AddChild(vanmenufieldto);
-	vanbox->AddChild(vanresultcontrol);
+	
+	BLayoutBuilder::Group<>(VanView, B_VERTICAL)
+		.SetInsets(20)
+		.AddGrid()
+			.Add(vanfromtext,0,0)	
+			.Add(vanmenufieldfrom,1,0)
+			.Add(vantextcontrol,0,1,2,1)
+			.Add(vantotext,0,2)	
+			.Add(vanmenufieldto,1,2)
+			.Add(vanresultcontrol,0,3,2,1)
+		.End()
+	.End();
+	
+	
+	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_WINDOW_SPACING)
+		.SetInsets(0)
+		.Add(vanmenubar)
+		.AddGlue()
+		.Add(VanView)
+		.AddGlue()
+    .End();
+
 }
 
 
@@ -143,12 +149,7 @@ void VandelayWindow::MessageReceived(BMessage *message)
 {
 	switch(message->what)
 	{
-		case MENU_FILE_ABOUT:
-		{
-			VanAlert *vanalert = new VanAlert("about", "Vandelay 1.0\n\nBy David Blumberg\ndavidblumberg@linux.se", "Unbelievable!", NULL, NULL);
-			vanalert->Go();
-		}
-		break;
+
 		case MENU_FILE_QUIT:
 			be_app->PostMessage(B_QUIT_REQUESTED);
 		break;
@@ -347,8 +348,10 @@ void VandelayWindow::MessageReceived(BMessage *message)
 		}
 		break;
 		
+		
 		default:
 			BWindow::MessageReceived(message);
 		break;
 	}
 }
+
