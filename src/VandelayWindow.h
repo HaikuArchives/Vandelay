@@ -7,6 +7,7 @@
 #include <Alert.h>
 #include <Box.h>
 #include <MenuBar.h>
+#include <Button.h>
 #include <MenuField.h>
 #include <MenuItem.h>
 #include <PopUpMenu.h>
@@ -23,6 +24,7 @@ class VandelayWindow : public BWindow
 		virtual void MessageReceived(BMessage *message);
 		virtual	bool QuitRequested();
 		
+		void ClearTextFields();
 		
 	private:
 	
@@ -40,7 +42,7 @@ class VandelayWindow : public BWindow
 		BTextControl*		vanresultcontrol;
 		BStringView*		vanfromtext;
 		BStringView*		vantotext;
-	
+		BButton*		btnclear;
 };
 
 #endif // VANDELAY_WINDOW_H

@@ -106,6 +106,9 @@ VandelayWindow::VandelayWindow()
 	vanresultcontrol = new BTextControl("VanResultControl", NULL, NULL, NULL);
 	vanresultcontrol->SetDivider(35.0);
 	
+	// Create a Button
+	btnclear =
+		new BButton("button_clear", "Clear", new BMessage(BTN_CLEAR_PRESSED));
 	
 	/*------Set-views-background-colors-----------------------*/
 	VanView->SetViewColor(bgcolor);
@@ -120,6 +123,11 @@ VandelayWindow::VandelayWindow()
 			.Add(vantotext,0,2)	
 			.Add(vanmenufieldto,1,2)
 			.Add(vanresultcontrol,0,3,2,1)
+		.End()
+		.AddStrut(0)
+		.AddGroup(B_HORIZONTAL)
+			.AddGlue()
+			.Add(btnclear)
 		.End()
 	.End();
 	
@@ -347,10 +355,23 @@ void VandelayWindow::MessageReceived(BMessage *message)
 		}
 		break;
 		
+		case BTN_CLEAR_PRESSED:
+		{
+			ClearTextFields();
+	
+		}
 		
 		default:
 			BWindow::MessageReceived(message);
 		break;
 	}
+}
+
+void VandelayWindow::ClearTextFields(void)
+{
+	
+	vantextcontrol->SetText("");
+	vanresultcontrol->SetText("");
+	
 }
 
