@@ -9,7 +9,7 @@
 
 /*------Create-new-BWindow-class--------------------------------------*/
 VandelayWindow::VandelayWindow()
-		: BWindow(BRect(0,0,-1,-1), "Vandelay", B_TITLED_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
+		: BWindow(BRect(0,0,-1,-1), "Vandelay", B_TITLED_WINDOW, B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	
 	// Resize and Center Window on Screen
