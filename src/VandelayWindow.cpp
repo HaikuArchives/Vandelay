@@ -41,9 +41,7 @@ VandelayWindow::VandelayWindow()
 	
 	
 	// Create new BTextControl        
-	vantextcontrol = new BTextControl("InputBox", NULL, "Enter #", new BMessage(CONVERT_FROM_VALUE));
-	vantextcontrol->SetDivider(45.0);
-	vantextcontrol->SetModificationMessage(new BMessage(CONVERT_FROM_VALUE_MODMSG));
+	vantextcontrol = new BTextControl("InputBox", NULL, "Enter the value to convert", NULL);
 	
 	
 	/*------Create-new-BMenuField-----------------------------*/
@@ -89,26 +87,26 @@ VandelayWindow::VandelayWindow()
 		
 	// Create new BMenuField
 	vanmenufieldfrom = new BMenuField("VanMenuFieldFrom", NULL, vanmenufrom);
-	vanmenufieldfrom->SetDivider(32.0);
 	vanmenufieldfrom->Menu()->SetLabelFromMarked(true);
-	vanmenufieldfrom->SetEnabled(false);
+	
 	
 	vanmenufieldto = new BMenuField("VanMenuFieldTo", NULL, vanmenuto);
-	vanmenufieldto->SetDivider(32.0);
 	vanmenufieldto->SetAlignment(B_ALIGN_RIGHT);	
 	vanmenufieldto->Menu()->SetLabelFromMarked(true);
-	vanmenufieldto->SetEnabled(false);
+	
 	
 	vanfromtext= new BStringView( "input_label", "Convert From");
 	vantotext= new BStringView("output_label", "Convert To");
 	
 	/*------Create-a-result-view------------------------------*/
 	vanresultcontrol = new BTextControl("VanResultControl", NULL, NULL, NULL);
-	vanresultcontrol->SetDivider(35.0);
 	
 	// Create a Button
 	btnclear =
 		new BButton("button_clear", "Clear", new BMessage(BTN_CLEAR_PRESSED));
+		
+	btncompute =
+		new BButton("button_compute", "Compute", new BMessage(BTN_COMPUTE_PRESSED));
 	
 	/*------Set-views-background-colors-----------------------*/
 	VanView->SetViewColor(bgcolor);
@@ -127,6 +125,7 @@ VandelayWindow::VandelayWindow()
 		.AddStrut(0)
 		.AddGroup(B_HORIZONTAL)
 			.AddGlue()
+			.Add(btncompute)
 			.Add(btnclear)
 		.End()
 	.End();
@@ -161,210 +160,194 @@ void VandelayWindow::MessageReceived(BMessage *message)
 			be_app->PostMessage(B_QUIT_REQUESTED);
 		break;
 		
-		// Convert value modification message
-		case CONVERT_FROM_VALUE_MODMSG:
-			vanmenufieldfrom->SetEnabled(true);
-		break;
-		
-		// Convert Value
-		case CONVERT_FROM_VALUE:
-			InputValue = atof(vantextcontrol->TextView()->Text());
-		break;
 		
 		// Convert From
 		case CONVERT_FROM_FOOT:
 		{
 			FromValue = 0;
-			vanmenufieldto->SetEnabled(true);
+			
 		}
 		break;
 		case CONVERT_FROM_KILOMETER:
 		{
 			FromValue = 1;
-			vanmenufieldto->SetEnabled(true);
+			
 		}
 		break;
 		case CONVERT_FROM_METER:
 		{
 			FromValue = 2;
-			vanmenufieldto->SetEnabled(true);
+		
 		}
 		break;
 		case CONVERT_FROM_MILEUS:
 		{
 			FromValue = 3;
-			vanmenufieldto->SetEnabled(true);
+		
 		}
 		break;
 		case CONVERT_FROM_HORSEPOWER:
 		{
 			FromValue = 4;
-			vanmenufieldto->SetEnabled(true);
+		
 		}
 		break;
 		case CONVERT_FROM_KILOWATT:
 		{
 			FromValue = 5;
-			vanmenufieldto->SetEnabled(true);
 		}
 		break;
 		case CONVERT_FROM_CELSIUS:
 		{
 			FromValue = 6;
-			vanmenufieldto->SetEnabled(true);
+
 		}
 		break;
 		case CONVERT_FROM_FAHRENHEIT:
 		{
 			FromValue = 7;
-			vanmenufieldto->SetEnabled(true);
+
 		}
 		break;
 		case CONVERT_FROM_GALLONUS:
 		{
 			FromValue = 8;
-			vanmenufieldto->SetEnabled(true);
+
 		}
 		break;
 		case CONVERT_FROM_LITRE:
 		{
 			FromValue = 9;
-			vanmenufieldto->SetEnabled(true);
+
 		}
 		break;
 		case CONVERT_FROM_KILOGRAM:
 		{
 			FromValue = 10;
-			vanmenufieldto->SetEnabled(true);
+			
 		}
 		break;
 		case CONVERT_FROM_POUND:
 		{
 			FromValue = 11;
-			vanmenufieldto->SetEnabled(true);
+		
 		}
 		break;
 		
 		// Convert To
 		case CONVERT_TO_FOOT:
 		{
-			BString line;
+			
 			ToValue = 0;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+			
 		}
 		break;
 		case CONVERT_TO_KILOMETER:
 		{
-			BString line;
+
 			ToValue = 1;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+
 		}
 		break;
 		case CONVERT_TO_METER:
 		{
-			BString line;
+			
 			ToValue = 2;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+			
 		}
 		break;
 		case CONVERT_TO_MILEUS:
 		{
-			BString line;
+			
 			ToValue = 3;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+			
 		}
 		break;
 		case CONVERT_TO_HORSEPOWER:
 		{
-			BString line;
+		
 			ToValue = 4;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+		
 		}
 		break;
 		case CONVERT_TO_KILOWATT:
 		{
-			BString line;
+		
 			ToValue = 5;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+		
 		}
 		break;
 		case CONVERT_TO_CELSIUS:
 		{
-			BString line;
+			
 			ToValue = 6;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+			
 		}
 		break;
 		case CONVERT_TO_FAHRENHEIT:
 		{
-			BString line;
+		
 			ToValue = 7;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+		
 		}
 		break;
 		case CONVERT_TO_GALLONUS:
 		{
-			BString line;
+			
 			ToValue = 8;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+		
 		}
 		break;
 		case CONVERT_TO_LITRE:
 		{
-			BString line;
+			
 			ToValue = 9;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+	
 		}
 		break;
 		case CONVERT_TO_KILOGRAM:
 		{
-			BString line;
+	
 			ToValue = 10;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+			
 		}
 		break;
 		case CONVERT_TO_POUND:
 		{
-			BString line;
+			
 			ToValue = 11;
-			Result = VanConvert(InputValue, FromValue, ToValue);
-			line << Result;
-			vanresultcontrol->TextView()->SetText(line.String());
+		
 		}
 		break;
-		
+		case BTN_COMPUTE_PRESSED:
+		{
+			
+			ComputeResult();
+			
+		}
+		break;
 		case BTN_CLEAR_PRESSED:
 		{
+			
 			ClearTextFields();
 	
 		}
+		break;
 		
 		default:
 			BWindow::MessageReceived(message);
 		break;
 	}
+}
+
+void VandelayWindow::ComputeResult(void)
+{
+	BString line;
+	InputValue = atof(vantextcontrol->Text());
+	Result = VanConvert(InputValue, FromValue, ToValue);
+	line << Result;
+	vanresultcontrol->SetText(line.String());
+
 }
 
 void VandelayWindow::ClearTextFields(void)

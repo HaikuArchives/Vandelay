@@ -2,8 +2,8 @@
 const uint32 MENU_APP_QUIT = 'MAqu';
 
 /*------Clear-Message-IDs-----------------------*/
-const uint32 BTN_CLEAR_PRESSED = 'BCpr';
-
+const uint32 BTN_CLEAR_PRESSED = 'BClp';
+const uint32 BTN_COMPUTE_PRESSED = 'BCop';
 /*------Converting-Message-IDs-----------------*/
 // Input
 const uint32 CONVERT_FROM_VALUE = 'CFva';

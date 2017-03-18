@@ -25,6 +25,7 @@ class VandelayWindow : public BWindow
 		virtual	bool QuitRequested();
 		
 		void ClearTextFields();
+		void ComputeResult();
 		
 	private:
 	
@@ -43,6 +44,7 @@ class VandelayWindow : public BWindow
 		BStringView*		vanfromtext;
 		BStringView*		vantotext;
 		BButton*		btnclear;
+		BButton*		btncompute;
 };
 
 #endif // VANDELAY_WINDOW_H
