@@ -34,7 +34,7 @@ class VandelayWindow : public BWindow
 		
 		BView*			VanView;
 		BMenuBar*		vanmenubar;
-		BMenu*			filemenu;
+		BMenu*			appmenu;
 		BMenu*			vanmenufrom;
 		BMenu*			vanmenuto;
 		BTextControl*		vantextcontrol;

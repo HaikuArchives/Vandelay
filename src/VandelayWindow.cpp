@@ -26,18 +26,18 @@ VandelayWindow::VandelayWindow()
 	vanmenubar = new BMenuBar("VanMenuBar");
 	
 	// Create new BMenu
-	filemenu = new BMenu("File");
+	appmenu = new BMenu("App");
 	
 	// Add menu items to BMenu
 	
 	BMenuItem * item = new BMenuItem("About" , new BMessage(B_ABOUT_REQUESTED));
 	item->SetTarget(be_app);
-	filemenu->AddItem(item);
-	filemenu->AddSeparatorItem();
-	filemenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_APP_QUIT), 'Q', B_COMMAND_KEY));
+	appmenu->AddItem(item);
+	appmenu->AddSeparatorItem();
+	appmenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_APP_QUIT), 'Q', B_COMMAND_KEY));
 	
 	// Add BMenu to BMenuBar
-	vanmenubar->AddItem(filemenu);
+	vanmenubar->AddItem(appmenu);
 	
 	
 	// Create new BTextControl        
