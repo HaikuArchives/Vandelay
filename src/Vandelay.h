@@ -3,12 +3,17 @@
 
 #include <Application.h>
 
+#include "VandelayWindow.h"
 
-/*------Create-new-BApplication-class-----------------*/
-class VandelayApp : public BApplication 
-{
-	public:
+
+class VandelayApp : public BApplication {
+public:
 		VandelayApp();
+
+	void	AboutRequested();
+		
+private:
+	VandelayWindow*	fMainWindow;
 };
 
 #endif // VANDELAY_H

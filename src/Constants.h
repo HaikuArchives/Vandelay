@@ -1,16 +1,13 @@
-/*------Menu-Message-IDs-----------------------*/
-const uint32 MENU_FILE_ABOUT = 'MFat';
-const uint32 MENU_FILE_QUIT = 'MFqu';
+// Menu-Message-IDs
+const uint32 MENU_APP_QUIT = 'MAqu';
 
-/*------Converting-Message-IDs-----------------*/
-// Input
-const uint32 CONVERT_FROM_VALUE = 'CFva';
-// Input Modification Message
-const uint32 CONVERT_FROM_VALUE_MODMSG = 'CFvm';
-// Result
-const uint32 CONVERT_RESULT = 'CVrt';
+// Clear-Message-IDs
+const uint32 BTN_CLEAR_PRESSED = 'BClp';
+const uint32 BTN_COMPUTE_PRESSED = 'BCop';
 
+// Converting-Message-IDs
 // From
+const uint32 CONVERT_RESULT = 'CVrt';
 const uint32 CONVERT_FROM_FOOT = 'CFft';
 const uint32 CONVERT_FROM_KILOMETER = 'CFkm';
 const uint32 CONVERT_FROM_METER = 'CFmt';
@@ -23,6 +20,7 @@ const uint32 CONVERT_FROM_GALLONUS = 'CFgl';
 const uint32 CONVERT_FROM_LITRE = 'CFlr';
 const uint32 CONVERT_FROM_KILOGRAM = 'CFkg';
 const uint32 CONVERT_FROM_POUND = 'CFpd';
+
 // To
 const uint32 CONVERT_TO_FOOT = 'CTft';
 const uint32 CONVERT_TO_KILOMETER = 'CTkm';

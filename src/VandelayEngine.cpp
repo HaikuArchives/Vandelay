@@ -63,5 +63,5 @@ float VanConvert(float i, int f, int t)
 	else
 		r = 0.0;
 	
-	return(r);
+	return r;
 }
