@@ -1,17 +1,17 @@
+#include <Alert.h>
 #include <Application.h>
 #include <LayoutBuilder.h>
-#include <Alert.h>
-#include "VandelayWindow.h"
+
 #include "Constants.h"
 #include "VandelayEngine.h"
+#include "VandelayWindow.h"
 
 
-
-/*------Create-new-BWindow-class--------------------------------------*/
 VandelayWindow::VandelayWindow()
-		: BWindow(BRect(0,0,-1,-1), "Vandelay", B_TITLED_WINDOW, B_AUTO_UPDATE_SIZE_LIMITS)
+	: 
+	BWindow(BRect(0, 0, -1, -1), "Vandelay", B_TITLED_WINDOW, 
+		B_AUTO_UPDATE_SIZE_LIMITS)
 {
-	
 	// Resize and Center Window on Screen
 	ResizeTo(400,300);
 	CenterOnScreen();
@@ -20,341 +20,277 @@ VandelayWindow::VandelayWindow()
 	rgb_color bgcolor = ui_color(B_PANEL_BACKGROUND_COLOR);
 	
 	// Set up a rectangle and make a new view
-	VanView = new BView("VandelayView", B_WILL_DRAW);
+	fBack = new BView("Back", B_WILL_DRAW);
 	
 	// Create new BMenuBar
-	vanmenubar = new BMenuBar("VanMenuBar");
+	fMenuBar = new BMenuBar("MenuBar");
 	
 	// Create new BMenu
-	appmenu = new BMenu("App");
+	fAppMenu = new BMenu("App");
 	
 	// Add menu items to BMenu
 	
 	BMenuItem * item = new BMenuItem("About" , new BMessage(B_ABOUT_REQUESTED));
 	item->SetTarget(be_app);
-	appmenu->AddItem(item);
-	appmenu->AddSeparatorItem();
-	appmenu->AddItem(new BMenuItem("Quit", new BMessage(MENU_APP_QUIT), 'Q', B_COMMAND_KEY));
+	fAppMenu->AddItem(item);
+	fAppMenu->AddSeparatorItem();
+	fAppMenu->AddItem(new BMenuItem("Quit", new 
+		BMessage(MENU_APP_QUIT), 'Q', B_COMMAND_KEY));
 	
 	// Add BMenu to BMenuBar
-	vanmenubar->AddItem(appmenu);
-	
+	fMenuBar->AddItem(fAppMenu);
 	
 	// Create new BTextControl        
-	vantextcontrol = new BTextControl("InputBox", NULL, "Enter the value to convert", NULL);
+	fInputText = new BTextControl("InputText", NULL, "Enter the value to convert", NULL);
 	
-	
-	/*------Create-new-BMenuField-----------------------------*/
 	// Create new BMenu
-	vanmenufrom = new BMenu("<Select Unit>");
-	vanmenuto = new BMenu("<Select Unit>");
+	fMenuFrom = new BMenu("<Select Unit>");
+	fMenuTo = new BMenu("<Select Unit>");
 				
-	// Add menu items to BMenus      // Distance
-	vanmenufrom->AddItem(new BMenuItem("Foot", new BMessage(CONVERT_FROM_FOOT)));
-	vanmenufrom->AddItem(new BMenuItem("Kilometer", new BMessage(CONVERT_FROM_KILOMETER)));
-	vanmenufrom->AddItem(new BMenuItem("Meter", new BMessage(CONVERT_FROM_METER)));
-	vanmenufrom->AddItem(new BMenuItem("Mile(US)", new BMessage(CONVERT_FROM_MILEUS)));
-	vanmenufrom->AddSeparatorItem(); // Power
-	vanmenufrom->AddItem(new BMenuItem("Horsepower", new BMessage(CONVERT_FROM_HORSEPOWER)));
-	vanmenufrom->AddItem(new BMenuItem("Kilowatt", new BMessage(CONVERT_FROM_KILOWATT)));
-	vanmenufrom->AddSeparatorItem(); // Temperature
-	vanmenufrom->AddItem(new BMenuItem("Celsius", new BMessage(CONVERT_FROM_CELSIUS)));
-	vanmenufrom->AddItem(new BMenuItem("Fahrenheit", new BMessage(CONVERT_FROM_FAHRENHEIT)));
-	vanmenufrom->AddSeparatorItem(); // Volume
-	vanmenufrom->AddItem(new BMenuItem("Gallon(US)", new BMessage(CONVERT_FROM_GALLONUS)));
-	vanmenufrom->AddItem(new BMenuItem("Litre", new BMessage(CONVERT_FROM_LITRE)));
-	vanmenufrom->AddSeparatorItem(); // Weight
-	vanmenufrom->AddItem(new BMenuItem("Kilogram", new BMessage(CONVERT_FROM_KILOGRAM)));
-	vanmenufrom->AddItem(new BMenuItem("Pound", new BMessage(CONVERT_FROM_POUND)));
+	// Add menu items to BMenus      
+	// Distance
+	fMenuFrom->AddItem(new BMenuItem("Foot", new BMessage(CONVERT_FROM_FOOT)));
+	fMenuFrom->AddItem(new BMenuItem("Kilometer", new BMessage(CONVERT_FROM_KILOMETER)));
+	fMenuFrom->AddItem(new BMenuItem("Meter", new BMessage(CONVERT_FROM_METER)));
+	fMenuFrom->AddItem(new BMenuItem("Mile(US)", new BMessage(CONVERT_FROM_MILEUS)));
+	fMenuFrom->AddSeparatorItem(); 
+	// Power
+	fMenuFrom->AddItem(new BMenuItem("Horsepower", new BMessage(CONVERT_FROM_HORSEPOWER)));
+	fMenuFrom->AddItem(new BMenuItem("Kilowatt", new BMessage(CONVERT_FROM_KILOWATT)));
+	fMenuFrom->AddSeparatorItem(); 
+	// Temperature
+	fMenuFrom->AddItem(new BMenuItem("Celsius", new BMessage(CONVERT_FROM_CELSIUS)));
+	fMenuFrom->AddItem(new BMenuItem("Fahrenheit", new BMessage(CONVERT_FROM_FAHRENHEIT)));
+	fMenuFrom->AddSeparatorItem(); 
+	// Volume
+	fMenuFrom->AddItem(new BMenuItem("Gallon(US)", new BMessage(CONVERT_FROM_GALLONUS)));
+	fMenuFrom->AddItem(new BMenuItem("Litre", new BMessage(CONVERT_FROM_LITRE)));
+	fMenuFrom->AddSeparatorItem(); 
+	// Weight
+	fMenuFrom->AddItem(new BMenuItem("Kilogram", new BMessage(CONVERT_FROM_KILOGRAM)));
+	fMenuFrom->AddItem(new BMenuItem("Pound", new BMessage(CONVERT_FROM_POUND)));
 	
-									 // Distance
-	vanmenuto->AddItem(new BMenuItem("Foot", new BMessage(CONVERT_TO_FOOT)));
-	vanmenuto->AddItem(new BMenuItem("Kilometer", new BMessage(CONVERT_TO_KILOMETER)));
-	vanmenuto->AddItem(new BMenuItem("Meter", new BMessage(CONVERT_TO_METER)));
-	vanmenuto->AddItem(new BMenuItem("Mile(US)", new BMessage(CONVERT_TO_MILEUS)));
-	vanmenuto->AddSeparatorItem(); // Power
-	vanmenuto->AddItem(new BMenuItem("Horsepower", new BMessage(CONVERT_TO_HORSEPOWER)));
-	vanmenuto->AddItem(new BMenuItem("Kilowatt", new BMessage(CONVERT_TO_KILOWATT)));
-	vanmenuto->AddSeparatorItem(); // Temperature
-	vanmenuto->AddItem(new BMenuItem("Celsius", new BMessage(CONVERT_TO_CELSIUS)));
-	vanmenuto->AddItem(new BMenuItem("Fahrenheit", new BMessage(CONVERT_TO_FAHRENHEIT)));
-	vanmenuto->AddSeparatorItem(); // Volume
-	vanmenuto->AddItem(new BMenuItem("Gallon(US)", new BMessage(CONVERT_TO_GALLONUS)));
-	vanmenuto->AddItem(new BMenuItem("Litre", new BMessage(CONVERT_TO_LITRE)));
-	vanmenuto->AddSeparatorItem(); // Weight
-	vanmenuto->AddItem(new BMenuItem("Kilogram", new BMessage(CONVERT_TO_KILOGRAM)));
-	vanmenuto->AddItem(new BMenuItem("Pound", new BMessage(CONVERT_TO_POUND)));
+	 // Distance
+	fMenuTo->AddItem(new BMenuItem("Foot", new BMessage(CONVERT_TO_FOOT)));
+	fMenuTo->AddItem(new BMenuItem("Kilometer", new BMessage(CONVERT_TO_KILOMETER)));
+	fMenuTo->AddItem(new BMenuItem("Meter", new BMessage(CONVERT_TO_METER)));
+	fMenuTo->AddItem(new BMenuItem("Mile(US)", new BMessage(CONVERT_TO_MILEUS)));
+	fMenuTo->AddSeparatorItem(); 
+	// Power
+	fMenuTo->AddItem(new BMenuItem("Horsepower", new BMessage(CONVERT_TO_HORSEPOWER)));
+	fMenuTo->AddItem(new BMenuItem("Kilowatt", new BMessage(CONVERT_TO_KILOWATT)));
+	fMenuTo->AddSeparatorItem(); 
+	// Temperature
+	fMenuTo->AddItem(new BMenuItem("Celsius", new BMessage(CONVERT_TO_CELSIUS)));
+	fMenuTo->AddItem(new BMenuItem("Fahrenheit", new BMessage(CONVERT_TO_FAHRENHEIT)));
+	fMenuTo->AddSeparatorItem(); 
+	// Volume
+	fMenuTo->AddItem(new BMenuItem("Gallon(US)", new BMessage(CONVERT_TO_GALLONUS)));
+	fMenuTo->AddItem(new BMenuItem("Litre", new BMessage(CONVERT_TO_LITRE)));
+	fMenuTo->AddSeparatorItem(); 
+	// Weight
+	fMenuTo->AddItem(new BMenuItem("Kilogram", new BMessage(CONVERT_TO_KILOGRAM)));
+	fMenuTo->AddItem(new BMenuItem("Pound", new BMessage(CONVERT_TO_POUND)));
 		
 	// Create new BMenuField
-	vanmenufieldfrom = new BMenuField("VanMenuFieldFrom", NULL, vanmenufrom);
-	vanmenufieldfrom->Menu()->SetLabelFromMarked(true);
+	fMenuFieldFrom = new BMenuField("MenuFieldFrom", NULL, fMenuFrom);
+	fMenuFieldFrom->Menu()->SetLabelFromMarked(true);
 	
+	fMenuFieldTo = new BMenuField("MenuFieldTo", NULL, fMenuTo);
+	fMenuFieldTo->SetAlignment(B_ALIGN_RIGHT);	
+	fMenuFieldTo->Menu()->SetLabelFromMarked(true);
 	
-	vanmenufieldto = new BMenuField("VanMenuFieldTo", NULL, vanmenuto);
-	vanmenufieldto->SetAlignment(B_ALIGN_RIGHT);	
-	vanmenufieldto->Menu()->SetLabelFromMarked(true);
+	fLabelFrom = new BStringView("InputLabel", "Convert From");
+	fLabelTo = new BStringView("OutputLabel", "Convert To");
 	
-	
-	vanfromtext= new BStringView( "input_label", "Convert From");
-	vantotext= new BStringView("output_label", "Convert To");
-	
-	/*------Create-a-result-view------------------------------*/
-	vanresultcontrol = new BTextControl("VanResultControl", NULL, NULL, NULL);
+	// Create a result view
+	fResultText = new BTextControl("ResultText", NULL, NULL, NULL);
 	
 	// Create a Button
-	btnclear =
-		new BButton("button_clear", "Clear", new BMessage(BTN_CLEAR_PRESSED));
+	fBtnClear = new BButton("ClearButton", "Clear", new BMessage(BTN_CLEAR_PRESSED));
 		
-	btncompute =
-		new BButton("button_compute", "Compute", new BMessage(BTN_COMPUTE_PRESSED));
+	fBtnCompute = new BButton("ComputeButton", "Compute", new BMessage(BTN_COMPUTE_PRESSED));
 	
-	/*------Set-views-background-colors-----------------------*/
-	VanView->SetViewColor(bgcolor);
+	// Set view's background color
+	fBack->SetViewColor(bgcolor);
 	
-	
-	BLayoutBuilder::Group<>(VanView, B_VERTICAL)
+
+	BLayoutBuilder::Group<>(fBack, B_VERTICAL)
 		.SetInsets(20)
 		.AddGrid()
-			.Add(vanfromtext,0,0)	
-			.Add(vanmenufieldfrom,1,0)
-			.Add(vantextcontrol,0,1,2,1)
-			.Add(vantotext,0,2)	
-			.Add(vanmenufieldto,1,2)
-			.Add(vanresultcontrol,0,3,2,1)
+			.Add(fLabelFrom, 0, 0)	
+			.Add(fMenuFieldFrom, 1, 0)
+			.Add(fInputText, 0, 1, 2, 1)
+			.Add(fLabelTo, 0, 2)	
+			.Add(fMenuFieldTo, 1, 2)
+			.Add(fResultText, 0, 3, 2, 1)
 		.End()
 		.AddStrut(0)
 		.AddGroup(B_HORIZONTAL)
 			.AddGlue()
-			.Add(btncompute)
-			.Add(btnclear)
+			.Add(fBtnCompute)
+			.Add(fBtnClear)
 		.End()
 	.End();
 	
 	
-	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_WINDOW_SPACING)
-		.SetInsets(0)
-		.Add(vanmenubar)
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(fMenuBar)
 		.AddGlue()
-		.Add(VanView)
+		.Add(fBack)
 		.AddGlue()
-    .End();
+	.End();
 
 }
 
 
-/*------MUST-HAVE-for-closing-app-with-close-box------------------------*/
-bool VandelayWindow::QuitRequested()
+bool 
+VandelayWindow::QuitRequested()
 {
 	be_app->PostMessage(B_QUIT_REQUESTED);
-	return(true);
+	return true;
 }
 
 
-/*------VandelayWindow-BMessage-Switch----------------------------------*/
-void VandelayWindow::MessageReceived(BMessage *message)
+void 
+VandelayWindow::MessageReceived(BMessage *message)
 {
-	switch(message->what)
-	{
+	switch(message->what) {
 
 		case MENU_APP_QUIT:
 			be_app->PostMessage(B_QUIT_REQUESTED);
-		break;
-		
-		
+			break;
+
 		// Convert From
 		case CONVERT_FROM_FOOT:
-		{
-			FromValue = 0;
-			
-		}
-		break;
+			fFromValue = 0;
+			break;
+		
 		case CONVERT_FROM_KILOMETER:
-		{
-			FromValue = 1;
-			
-		}
-		break;
+			fFromValue = 1;
+			break;
+		
 		case CONVERT_FROM_METER:
-		{
-			FromValue = 2;
-		
-		}
-		break;
+			fFromValue = 2;
+			break;
+
 		case CONVERT_FROM_MILEUS:
-		{
-			FromValue = 3;
+			fFromValue = 3;
+			break;
 		
-		}
-		break;
 		case CONVERT_FROM_HORSEPOWER:
-		{
-			FromValue = 4;
+			fFromValue = 4;
+			break;
 		
-		}
-		break;
 		case CONVERT_FROM_KILOWATT:
-		{
-			FromValue = 5;
-		}
-		break;
-		case CONVERT_FROM_CELSIUS:
-		{
-			FromValue = 6;
-
-		}
-		break;
-		case CONVERT_FROM_FAHRENHEIT:
-		{
-			FromValue = 7;
-
-		}
-		break;
-		case CONVERT_FROM_GALLONUS:
-		{
-			FromValue = 8;
-
-		}
-		break;
-		case CONVERT_FROM_LITRE:
-		{
-			FromValue = 9;
-
-		}
-		break;
-		case CONVERT_FROM_KILOGRAM:
-		{
-			FromValue = 10;
-			
-		}
-		break;
-		case CONVERT_FROM_POUND:
-		{
-			FromValue = 11;
+			fFromValue = 5;
+			break;
 		
-		}
-		break;
+		case CONVERT_FROM_CELSIUS:
+			fFromValue = 6;
+			break;
+	;
+		case CONVERT_FROM_FAHRENHEIT:
+			fFromValue = 7;
+			break;
+		
+		case CONVERT_FROM_GALLONUS:
+			fFromValue = 8;
+			break;
+		
+		case CONVERT_FROM_LITRE:
+			fFromValue = 9;
+			break;
+		
+		case CONVERT_FROM_KILOGRAM:
+			fFromValue = 10;
+			break;
+	
+		case CONVERT_FROM_POUND:
+			fFromValue = 11;
+			break;
 		
 		// Convert To
 		case CONVERT_TO_FOOT:
-		{
-			
-			ToValue = 0;
-			
-		}
-		break;
+			fToValue = 0;
+			break;
+		
 		case CONVERT_TO_KILOMETER:
-		{
-
-			ToValue = 1;
-
-		}
-		break;
+			fToValue = 1;
+			break;
+		
 		case CONVERT_TO_METER:
-		{
-			
-			ToValue = 2;
-			
-		}
-		break;
+			fToValue = 2;
+			break;
+		
 		case CONVERT_TO_MILEUS:
-		{
-			
-			ToValue = 3;
-			
-		}
-		break;
+			fToValue = 3;
+			break;
+		
 		case CONVERT_TO_HORSEPOWER:
-		{
+			fToValue = 4;
+			break;
 		
-			ToValue = 4;
-		
-		}
-		break;
 		case CONVERT_TO_KILOWATT:
-		{
+			fToValue = 5;
+			break;
 		
-			ToValue = 5;
-		
-		}
-		break;
 		case CONVERT_TO_CELSIUS:
-		{
-			
-			ToValue = 6;
-			
-		}
-		break;
+			fToValue = 6;
+			break;
+		
 		case CONVERT_TO_FAHRENHEIT:
-		{
-		
-			ToValue = 7;
-		
-		}
-		break;
+			fToValue = 7;
+			break;
+
 		case CONVERT_TO_GALLONUS:
-		{
-			
-			ToValue = 8;
+			fToValue = 8;
+			break;
 		
-		}
-		break;
 		case CONVERT_TO_LITRE:
-		{
-			
-			ToValue = 9;
-	
-		}
-		break;
-		case CONVERT_TO_KILOGRAM:
-		{
-	
-			ToValue = 10;
-			
-		}
-		break;
-		case CONVERT_TO_POUND:
-		{
-			
-			ToValue = 11;
+			fToValue = 9;
+			break;
 		
-		}
-		break;
+		case CONVERT_TO_KILOGRAM:
+			fToValue = 10;
+			break;
+		
+		case CONVERT_TO_POUND:
+			fToValue = 11;
+			break;
+		
 		case BTN_COMPUTE_PRESSED:
-		{
-			
 			ComputeResult();
-			
-		}
-		break;
+			break;
+		
 		case BTN_CLEAR_PRESSED:
-		{
-			
 			ClearTextFields();
-	
-		}
-		break;
+			break;
 		
 		default:
 			BWindow::MessageReceived(message);
-		break;
+			break;
 	}
 }
 
-void VandelayWindow::ComputeResult(void)
+
+void 
+VandelayWindow::ComputeResult(void)
 {
 	BString line;
-	InputValue = atof(vantextcontrol->Text());
-	Result = VanConvert(InputValue, FromValue, ToValue);
-	line << Result;
-	vanresultcontrol->SetText(line.String());
+	fInputValue = atof(fInputText->Text());
+	fResult = VanConvert(fInputValue, fFromValue, fToValue);
+	line << fResult;
+	fResultText->SetText(line.String());
 
 }
 
-void VandelayWindow::ClearTextFields(void)
+
+void 
+VandelayWindow::ClearTextFields(void)
 {
-	
-	vantextcontrol->SetText("");
-	vanresultcontrol->SetText("");
+	fInputText->SetText("");
+	fResultText->SetText("");
 	
 }
 

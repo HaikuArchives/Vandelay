@@ -1,6 +1,6 @@
-1. Input Validation.
-2. Add more options for conversions.
-3. Enhance UI.
-4. Make neccessary changes to conform to Haiku Coding Style.
-5. Add ReadMe file.
-
+- [ ] Input Validation.
+- [ ] Add more options for conversions.
+- [ ] Enhance UI.
+- [x] Make neccessary changes to conform to Haiku Coding Style. 
+- [ ] Add ReadMe file.
+- [ ] Add License headers.
